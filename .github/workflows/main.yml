@@ -62,7 +62,7 @@ jobs:
            cd /home/ubuntu/${{ github.event.inputs.directory }}/apps/${{ github.event.inputs.app }} && \
            git fetch origin && \
            git checkout ${{ github.event.inputs.branch }} && \
-           git pull origin ${{ github.event.inputs.branch }} && \
+           git pull upstream ${{ github.event.inputs.branch }} && \
            
            cd /home/ubuntu/${{ github.event.inputs.directory }} && \
            source env/bin/activate && \
