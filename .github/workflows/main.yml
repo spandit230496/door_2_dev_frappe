@@ -16,7 +16,7 @@ on:
       directory:
         description: "Frappe bench directory"
         required: true
-        default: "frappe-bench"
+        default: "frappe_bench"
 
       app:
         description: "Frappe app to be deployed"
