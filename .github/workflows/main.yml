@@ -46,31 +46,31 @@ jobs:
           "whoami && hostname && pwd && echo 'SSH LOGIN OK'"
 
 
-      # - name: Deploy to Contabo VPS
-      #   run: |
-      #     ssh -tt -o StrictHostKeyChecking=no \
-      #     ${{ secrets.CONTABO_USER }}@${{ secrets.CONTABO_HOST }} \
-      #     "set -e && \
-      #      echo '🚀 Starting Frappe deploy' && \
+      - name: Deploy to Contabo VPS
+        run: |
+          ssh -tt -o StrictHostKeyChecking=no \
+          ${{ secrets.CONTABO_USER }}@${{ secrets.CONTABO_HOST }} \
+          "set -e && \
+           echo '🚀 Starting Frappe deploy' && \
            
-      #      export NVM_DIR=\$HOME/.nvm && \
-      #      [ -s \"\$NVM_DIR/nvm.sh\" ] && . \"\$NVM_DIR/nvm.sh\" && \
-      #      nvm install 20 && \
-      #      nvm use 20 && \
-      #      node -v && npm -v && \
+           export NVM_DIR=\$HOME/.nvm && \
+           [ -s \"\$NVM_DIR/nvm.sh\" ] && . \"\$NVM_DIR/nvm.sh\" && \
+           nvm install 20 && \
+           nvm use 20 && \
+           node -v && npm -v && \
            
-      #      cd /home/ubuntu/${{ github.event.inputs.directory }}/apps/${{ github.event.inputs.app }} && \
-      #      git fetch origin && \
-      #      git checkout ${{ github.event.inputs.branch }} && \
-      #      git pull origin ${{ github.event.inputs.branch }} && \
+           cd /home/ubuntu/${{ github.event.inputs.directory }}/apps/${{ github.event.inputs.app }} && \
+           git fetch origin && \
+           git checkout ${{ github.event.inputs.branch }} && \
+           git pull origin ${{ github.event.inputs.branch }} && \
            
-      #      cd /home/ubuntu/${{ github.event.inputs.directory }} && \
-      #      source env/bin/activate && \
+           cd /home/ubuntu/${{ github.event.inputs.directory }} && \
+           source env/bin/activate && \
            
-      #      sudo supervisorctl stop all && \
-      #      bench migrate && \
-      #      bench build && \
-      #      pm2 restart all && \
+           sudo supervisorctl stop all && \
+           bench migrate && \
+           bench build && \
+           pm2 restart all && \
            
            
-           # echo '✅ Deployment completed successfully'"
+           echo '✅ Deployment completed successfully'"
