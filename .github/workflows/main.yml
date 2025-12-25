@@ -1,0 +1,69 @@
+name: Deploy to Contabo VPS (Manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Deployment environment"
+        required: true
+        default: "production"
+
+      branch:
+        description: "Branch to deploy"
+        required: true
+        default: "main"
+
+      directory:
+        description: "Frappe bench directory"
+        required: true
+        default: "frappe-bench"
+
+      app:
+        description: "Frappe app to be deployed"
+        required: true
+        default: "door_2_dev"
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: production
+
+    steps:
+      - name: Checkout selected branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.CONTABO_SSH_KEY }}
+
+      - name: Deploy to Contabo VPS
+        run: |
+          ssh -tt -o StrictHostKeyChecking=no \
+          ${{ secrets.CONTABO_USER }}@${{ secrets.CONTABO_HOST }} \
+          "set -e && \
+           echo '🚀 Starting Frappe deploy' && \
+           
+           export NVM_DIR=\$HOME/.nvm && \
+           [ -s \"\$NVM_DIR/nvm.sh\" ] && . \"\$NVM_DIR/nvm.sh\" && \
+           nvm install 20 && \
+           nvm use 20 && \
+           node -v && npm -v && \
+           
+           cd /home/ubuntu/${{ github.event.inputs.directory }}/apps/${{ github.event.inputs.app }} && \
+           git fetch origin && \
+           git checkout ${{ github.event.inputs.branch }} && \
+           git pull origin ${{ github.event.inputs.branch }} && \
+           
+           cd /home/ubuntu/${{ github.event.inputs.directory }} && \
+           source env/bin/activate && \
+           
+           sudo supervisorctl stop all && \
+           bench migrate && \
+           bench build && \
+           pm2 restart all && \
+           
+           
+           echo '✅ Deployment completed successfully'"
