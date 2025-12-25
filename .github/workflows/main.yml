@@ -60,7 +60,7 @@ jobs:
            node -v && npm -v && \
            
            cd /home/ubuntu/${{ github.event.inputs.directory }}/apps/${{ github.event.inputs.app }} && \
-           git fetch origin && \
+           git fetch upstream && \
            git checkout ${{ github.event.inputs.branch }} && \
            git pull upstream ${{ github.event.inputs.branch }} && \
            
